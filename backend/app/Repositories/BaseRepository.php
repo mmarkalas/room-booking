@@ -8,6 +8,8 @@ abstract class BaseRepository
 {
     protected $model;
 
+    public const DEFAULT_LIMIT = 20;
+
     /**
      * Set model of repository
      *
@@ -28,7 +30,18 @@ abstract class BaseRepository
      */
     public function create($params): Model
     {
-        return $this->model::create($params);
+        return $this->model->create($params);
+    }
+
+    /**
+     * Insert multiple models
+     *
+     * @param  array $params
+     * @return Model
+     */
+    public function insert($params): void
+    {
+        $this->model->insert($params);
     }
 
     /**

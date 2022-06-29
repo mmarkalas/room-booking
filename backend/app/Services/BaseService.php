@@ -26,9 +26,31 @@ abstract class BaseService
      * @param  array $params
      * @return Model
      */
+    public function all()
+    {
+        return $this->repo->all();
+    }
+
+    /**
+     * Create New Model based on Repo
+     *
+     * @param  array $params
+     * @return Model
+     */
     public function create(array $params)
     {
         return $this->repo->create($params);
+    }
+
+    /**
+     * Create New Model based on Repo
+     *
+     * @param  array $params
+     * @return Model
+     */
+    public function insert(array $params)
+    {
+        return $this->repo->insert($params);
     }
 
     /**

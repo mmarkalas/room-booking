@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Users;
+namespace App\Http\Resources\Booking;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\BaseCollection;
 
-class UserCollection extends ResourceCollection
+class BookingCollection extends BaseCollection
 {
     /**
      * Transform the resource collection into an array.

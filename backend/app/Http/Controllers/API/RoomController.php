@@ -6,16 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegistrationRequest;
 use App\Http\Resources\User\UserResource;
-use App\Services\UserService;
+use App\Services\RoomService;
 use Illuminate\Http\Request;
 
-class AuthController extends Controller
+class RoomController extends Controller
 {
-    private $userService;
+    private $roomService;
 
-    public function __construct(UserService $userService) {
+    public function __construct(RoomService $roomService) {
         parent::__construct();
-        $this->userService = $userService;
+        $this->roomService = $roomService;
     }
 
     public function register(RegistrationRequest $request)
