@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -46,5 +48,42 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        $statusCode = $this->isInvalidStatusCode($exception->getCode())
+            ? 500
+            : $exception->getCode();
+
+        $errorArray = [
+            'code'      =>  $statusCode,
+            'message'   =>  $exception->getMessage()
+        ];
+
+        if($exception instanceof ValidationException) {
+            throw new ApiException(
+                $exception->getMessage(),
+                $exception->getResponse() ? $exception->getResponse()->getStatusCode() : Response::HTTP_UNPROCESSABLE_ENTITY,
+                $exception->errors()
+            );
+        }
+
+        if ($exception instanceof ApiException) {
+            return $exception->getResponse();
+        }
+
+        return response()->json(['error' => $errorArray,], $statusCode);
+    }
+
+    /**
+     * Check if Status Code is Valid HTTP Code
+     *
+     * @param [type] $code
+     * @return boolean
+     */
+    private function isInvalidStatusCode($code): bool
+    {
+        return $code < 100 || $code >= 600;
     }
 }
