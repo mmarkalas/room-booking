@@ -1,0 +1,77 @@
+version: '3.8'
+services: 
+    # Backend REST API
+    backend:
+        build:
+            context: ./docker
+            dockerfile: backend.dockerfile
+        ports:
+            - 9000:9000
+        volumes:
+            - ./backend:/var/www/backend
+        depends_on:
+            - "database"
+        networks:
+            - room-booking
+    # Frontend VUE
+    frontend:
+        image: node:current-alpine
+        working_dir: /home/node/app
+        volumes:
+            - ./frontend:/home/node/app
+        environment:
+            NODE_ENV: development
+        command: "npm run dev"
+        depends_on:
+            - backend
+        networks:
+            - room-booking
+    # Web Server
+    www:
+        image: nginx:alpine
+        volumes:
+            - ./docker/vhost.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - 81:80
+        depends_on:
+            - backend
+            - frontend
+        networks:
+            - room-booking
+    # Database
+    database:
+        image: mysql:8.0
+        volumes:
+            - ./dbdata:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: 
+            MYSQL_DATABASE: 'room_booking'
+            MYSQL_PASSWORD:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes' 
+        ports:
+            - 33061:3306
+        networks:
+            - room-booking
+    # Database management
+    pma:
+        image: phpmyadmin:5.1
+        environment:
+            - PMA_ARBITRARY=1
+            - PMA_HOST=database
+            - PMA_PORT=3306
+            - PMA_USER='root'
+            - PMA_PASSWORD=
+            - UPLOAD_LIMIT=300M
+        depends_on:
+            - database
+        ports:
+            - 8888:80
+        networks:
+            - room-booking
+volumes:
+    dbdata:
+        driver: local
+
+networks:
+  room-booking:
+    driver: bridge
