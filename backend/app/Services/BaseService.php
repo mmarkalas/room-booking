@@ -33,6 +33,17 @@ abstract class BaseService
     }
 
     /**
+     * Get Model based on Repo
+     *
+     * @param  array $params
+     * @return Model
+     */
+    public function get($id)
+    {
+        return $this->repo->get($id);
+    }
+
+    /**
      * Create New Model based on Repo
      *
      * @param  array $params

@@ -12,7 +12,8 @@ class BookingService extends BaseService
 {
     private $roomRepo;
 
-    public function __construct(RoomRepository $roomRepo) {
+    public function __construct(RoomRepository $roomRepo)
+    {
         parent::__construct();
         $this->roomRepo = $roomRepo;
     }
@@ -40,7 +41,7 @@ class BookingService extends BaseService
             exactTime: true,
         );
 
-        if($existingBookings->count() > 0) {
+        if ($existingBookings->count() > 0) {
             $room = $existingBookings->first()->room;
 
             throw new ApiException(
@@ -69,7 +70,7 @@ class BookingService extends BaseService
                 exactTime: true,
             );
 
-        if($existingBookings->count() > 0) {
+        if ($existingBookings->count() > 0) {
             $room = $existingBookings->first()->room;
 
             throw new ApiException(

@@ -33,10 +33,10 @@ class BookingRepository extends BaseRepository
                 isset($request['search']) ? $request['search'] : false,
                 function ($query, $searchString) {
                     $query
-                        ->whereHas('room', function($q) use ($searchString) {
+                        ->whereHas('room', function ($q) use ($searchString) {
                             $q->where('name', 'LIKE', "%$searchString%");
                         })
-                        ->orWhereHas('user', function($q) use ($searchString) {
+                        ->orWhereHas('user', function ($q) use ($searchString) {
                             $q->where('name', 'LIKE', "%$searchString%")
                                 ->orWhere('username', 'LIKE', "%$searchString%");
                         });
@@ -72,18 +72,18 @@ class BookingRepository extends BaseRepository
                     $startDate = $fromDate->copy();
                     $endDate = $toDate->copy();
 
-                    if(!$exactTime) {
+                    if (!$exactTime) {
                         $startDate->startOfDay();
                         $endDate->endOfDay();
                     }
 
                     $query
-                        ->where(function($innerQuery) use ($startDate, $endDate) {
+                        ->where(function ($innerQuery) use ($startDate, $endDate) {
                             $innerQuery->where(function ($q) use ($startDate, $endDate) {
                                 $q->where('from_date', '>=', $startDate)
                                     ->where('from_date', '<=', $endDate);
                             })
-                            ->orWhere(function($q) use ($startDate, $endDate) {
+                            ->orWhere(function ($q) use ($startDate, $endDate) {
                                 $q->where('to_date', '>', $startDate)
                                     ->where('to_date', '<=', $endDate);
                             });

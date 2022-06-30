@@ -16,11 +16,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     protected $response;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->response = new ApiResponse();
     }
 

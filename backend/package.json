@@ -2,7 +2,9 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "cs:check": "./vendor/bin/phpcs",
+        "cs:fix": "./vendor/bin/phpcbf"
     },
     "devDependencies": {
         "axios": "^0.25",

@@ -13,7 +13,8 @@ class RoomController extends Controller
 {
     private $roomService;
 
-    public function __construct(RoomService $roomService) {
+    public function __construct(RoomService $roomService)
+    {
         parent::__construct();
         $this->roomService = $roomService;
     }

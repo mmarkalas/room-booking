@@ -10,7 +10,8 @@ class SameDay implements InvokableRule
 {
     private $requestKey;
 
-    public function __construct(string $requestKey) {
+    public function __construct(string $requestKey)
+    {
         $this->requestKey = $requestKey;
     }
     /**
@@ -28,7 +29,7 @@ class SameDay implements InvokableRule
 
         $requestKeyString =  Str::swap(['_' => ' ',], $this->requestKey);
 
-        if(!$thisDate->isSameDay($againstDate)) {
+        if (!$thisDate->isSameDay($againstDate)) {
             $fail("The :attribute is not the same day with $requestKeyString.");
         }
     }

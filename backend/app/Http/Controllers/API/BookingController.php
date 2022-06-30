@@ -14,7 +14,8 @@ class BookingController extends Controller
 {
     private $bookingService;
 
-    public function __construct(BookingService $bookingService) {
+    public function __construct(BookingService $bookingService)
+    {
         parent::__construct();
         $this->bookingService = $bookingService;
     }

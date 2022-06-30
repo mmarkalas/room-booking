@@ -62,15 +62,17 @@ class Handler extends ExceptionHandler
             'message'   =>  $exception->getMessage()
         ];
 
-        if($exception instanceof ValidationException) {
+        if ($exception instanceof ValidationException) {
             throw new ApiException(
                 $exception->getMessage(),
-                $exception->getResponse() ? $exception->getResponse()->getStatusCode() : Response::HTTP_UNPROCESSABLE_ENTITY,
+                $exception->getResponse()
+                    ? $exception->getResponse()->getStatusCode()
+                    : Response::HTTP_UNPROCESSABLE_ENTITY,
                 $exception->errors()
             );
         }
 
-        if($exception instanceof ModelNotFoundException) {
+        if ($exception instanceof ModelNotFoundException) {
             throw new ApiException(
                 __('responses.not_found'),
                 Response::HTTP_NOT_FOUND,

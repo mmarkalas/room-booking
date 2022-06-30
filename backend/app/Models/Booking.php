@@ -43,7 +43,7 @@ class Booking extends Model
      */
     public function scopeActiveBooking($query, string $id)
     {
-       return $query->where('id', '!=', $id);
+        return $query->where('id', '!=', $id);
     }
 
     public function room()

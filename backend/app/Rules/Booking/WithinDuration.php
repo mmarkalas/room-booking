@@ -10,7 +10,8 @@ class WithinDuration implements InvokableRule
 {
     private $requestKey;
 
-    public function __construct(string $requestKey) {
+    public function __construct(string $requestKey)
+    {
         $this->requestKey = $requestKey;
     }
 
@@ -29,15 +30,15 @@ class WithinDuration implements InvokableRule
 
         $diffInMins = $thisDate->diffInMinutes($againstDate);
 
-        if(
+        if (
             in_array(
-                $diffInMins, 
+                $diffInMins,
                 config('room-booking.durations')
             )
         ) {
-          return;
+            return;
         }
-        
+
         $requestKeyString =  Str::swap(['_' => ' ',], $this->requestKey);
 
         $fail("The :attribute and $requestKeyString is more/less than the allowed duration.");

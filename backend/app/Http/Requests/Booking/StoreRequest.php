@@ -32,7 +32,7 @@ class StoreRequest extends FormRequest
                 'required',
                 'date',
                 new SameDay('to_date'),
-                new WithinStartTime,
+                new WithinStartTime(),
                 new WithinDuration('to_date'),
             ],
             'to_date' => [

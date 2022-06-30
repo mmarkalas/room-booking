@@ -21,11 +21,11 @@ class WithinStartTime implements InvokableRule
 
         $startTimeArray = explode(':', config('room-booking.timeframe.start'));
         $endTimeArray = explode(':', config('room-booking.timeframe.end'));
-        
+
         $startTime = $thisDate->copy()->setTime(...$startTimeArray);
         $endTime = $thisDate->copy()->setTime(...$endTimeArray);
-        
-        if(
+
+        if (
             !($thisDate->gte($startTime) && $thisDate->lte($endTime))
         ) {
             $startString = $startTime->format('g:iA');
