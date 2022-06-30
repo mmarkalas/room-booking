@@ -24,11 +24,12 @@ class AuthController extends Controller
         return $this->runWithExceptionHandling(function () use ($request) {
             $user = $this->userService->create($request->validated());
 
-            $accessToken = $user->createToken('authToken')->accessToken;
+            $tokenObj = $user->createToken('authToken');
 
             return $this->response->setData([
                 'user' => new UserResource($user),
-                'access_token' => $accessToken
+                'access_token' => $tokenObj->accessToken,
+                'expires_at' => $tokenObj->token->expires_at->timestamp,
             ]);
         });
     }
@@ -38,10 +39,11 @@ class AuthController extends Controller
         return $this->runWithExceptionHandling(function () use ($request) {
             $user = $this->userService->authenticate($request->validated());
 
-            $accessToken = $user->createToken('authToken')->accessToken;
+            $tokenObj = $user->createToken('authToken');
 
             return $this->response->setData([
-                'access_token' => $accessToken
+                'access_token' => $tokenObj->accessToken,
+                'expires_at' => $tokenObj->token->expires_at->timestamp,
             ]);
         });
     }
