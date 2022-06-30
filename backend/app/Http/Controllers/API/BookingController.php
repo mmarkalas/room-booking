@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Booking\SearchRequest;
 use App\Http\Requests\Booking\StoreRequest;
 use App\Http\Resources\Booking\BookingCollection;
+use App\Http\Resources\Booking\BookingResource;
+use App\Models\Booking;
 use App\Services\BookingService;
-use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
@@ -44,11 +45,11 @@ class BookingController extends Controller
     public function store(StoreRequest $request)
     {
         return $this->runWithExceptionHandling(function () use ($request) {
-            $bookings = $this->bookingService
-                ->processBooking($request->validated());
+            $booking = $this->bookingService
+                ->createBooking($request->validated());
 
             return $this->response->setData(
-                new BookingCollection($bookings, true)
+                new BookingResource($booking)
             );
         });
     }
@@ -59,9 +60,13 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Booking $booking)
     {
-        //
+        return $this->runWithExceptionHandling(function () use ($booking) {
+            return $this->response->setData(
+                new BookingResource($booking)
+            );
+        });
     }
 
     /**
@@ -71,9 +76,16 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreRequest $request, Booking $booking)
     {
-        //
+        return $this->runWithExceptionHandling(function () use ($request, $booking) {
+            $booking = $this->bookingService
+                ->updateBooking($request->validated(), $booking);
+
+            return $this->response->setData(
+                new BookingResource($booking)
+            );
+        });
     }
 
     /**
@@ -82,8 +94,12 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Booking $booking)
     {
-        //
+        return $this->runWithExceptionHandling(function () use ($booking) {
+            $this->bookingService->delete($booking);
+
+            return $this->response;
+        });
     }
 }

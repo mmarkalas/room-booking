@@ -24,10 +24,10 @@ class SearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'date_from' => 'nullable|date',
-            'date_to' => 'nullable|date',
-            'room' => 'nullable|exists:rooms',
-            'user' => 'nullable|exists:users',
+            'from_date' => 'nullable|date',
+            'to_date' => 'nullable|date',
+            'room_id' => 'nullable|exists:rooms',
+            'user_id' => 'nullable|exists:users',
             'page' => 'nullable|numeric',
             'limit' => 'nullable|numeric',
         ];

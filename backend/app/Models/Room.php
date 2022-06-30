@@ -11,6 +11,20 @@ class Room extends Model
     use HasFactory;
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+    ];
+
+    /**
+     * The attributes that should be cast as Carbon.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);

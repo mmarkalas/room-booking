@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Booking;
 
+use App\Rules\Booking\SameDay;
+use App\Rules\Booking\WithinDuration;
+use App\Rules\Booking\WithinStartTime;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -24,10 +27,19 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'room_id' => 'required|exists:rooms',
-            'user_id' => 'required|exists:users',
-            'from_date' => 'required|date',
-            'to_date' => 'required|date',
+            'room_id' => 'required|exists:rooms,id',
+            'from_date' => [
+                'required',
+                'date',
+                new SameDay('to_date'),
+                new WithinStartTime,
+                new WithinDuration('to_date'),
+            ],
+            'to_date' => [
+                'required',
+                'date',
+                new SameDay('from_date'),
+            ],
         ];
     }
 }

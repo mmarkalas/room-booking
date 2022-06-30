@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,6 +67,13 @@ class Handler extends ExceptionHandler
                 $exception->getMessage(),
                 $exception->getResponse() ? $exception->getResponse()->getStatusCode() : Response::HTTP_UNPROCESSABLE_ENTITY,
                 $exception->errors()
+            );
+        }
+
+        if($exception instanceof ModelNotFoundException) {
+            throw new ApiException(
+                __('responses.not_found'),
+                Response::HTTP_NOT_FOUND,
             );
         }
 

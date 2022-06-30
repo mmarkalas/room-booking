@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseService
 {
@@ -54,6 +55,17 @@ abstract class BaseService
     }
 
     /**
+     * Update Model
+     *
+     * @param Model $model
+     * @return void
+     */
+    public function update(Model $model, array $params)
+    {
+        return $this->repo->update($model, $params);
+    }
+
+    /**
      * Get Auth User
      *
      * @param  array $params
@@ -62,5 +74,16 @@ abstract class BaseService
     public function getAuthUser(): User|null
     {
         return auth()->user();
+    }
+
+    /**
+     * Delete Model
+     *
+     * @param Model $model
+     * @return void
+     */
+    public function delete(Model $model)
+    {
+        return $this->repo->delete($model);
     }
 }

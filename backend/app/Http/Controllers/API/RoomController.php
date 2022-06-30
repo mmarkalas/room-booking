@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegistrationRequest;
-use App\Http\Resources\User\UserResource;
+use App\Http\Requests\Room\StoreRequest;
+use App\Http\Resources\Room\RoomCollection;
+use App\Http\Resources\Room\RoomResource;
+use App\Models\Room;
 use App\Services\RoomService;
-use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
@@ -18,39 +18,82 @@ class RoomController extends Controller
         $this->roomService = $roomService;
     }
 
-    public function register(RegistrationRequest $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        return $this->runWithExceptionHandling(function () use ($request) {
-            $user = $this->userService->create($request->validated());
+        return $this->runWithExceptionHandling(function () {
+            $rooms = $this->roomService->all();
 
-            $accessToken = $user->createToken('authToken')->accessToken;
-
-            return $this->response->setData([
-                'user' => new UserResource($user),
-                'access_token' => $accessToken
-            ]);
+            return $this->response->setData(
+                new RoomCollection($rooms, true)
+            );
         });
     }
 
-    public function login(LoginRequest $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StoreRequest $request)
     {
         return $this->runWithExceptionHandling(function () use ($request) {
-            $user = $this->userService->authenticate($request->validated());
+            $room = $this->roomService->create($request->validated());
 
-            $accessToken = $user->createToken('authToken')->accessToken;
-
-            return $this->response->setData([
-                'access_token' => $accessToken
-            ]);
+            return $this->response->setData(
+                new RoomResource($room)
+            );
         });
     }
 
-    public function logout(Request $request)
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Room $room)
     {
-        return $this->runWithExceptionHandling(function () use ($request) {
-            $user = $this->userService->getAuthUser();
+        return $this->runWithExceptionHandling(function () use ($room) {
+            return $this->response->setData(
+                new RoomResource($room)
+            );
+        });
+    }
 
-            $user->token()->revoke();
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(StoreRequest $request, Room $room)
+    {
+        return $this->runWithExceptionHandling(function () use ($request, $room) {
+            $room = $this->roomService->update($room, $request->validated());
+
+            return $this->response->setData(
+                new RoomResource($room)
+            );
+        });
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Room $room)
+    {
+        return $this->runWithExceptionHandling(function () use ($room) {
+            $this->roomService->delete($room);
 
             return $this->response;
         });
