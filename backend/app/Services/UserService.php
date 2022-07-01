@@ -23,7 +23,7 @@ class UserService extends BaseService
     {
         if (!auth()->attempt($request)) {
             throw new ApiException(
-                __('response.unauth'),
+                __('responses.unauth'),
                 Response::HTTP_UNAUTHORIZED
             );
         }

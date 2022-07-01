@@ -30,6 +30,8 @@ class SearchRequest extends FormRequest
             'user_id' => 'nullable|exists:users',
             'page' => 'nullable|numeric',
             'limit' => 'nullable|numeric',
+            'search' => 'nullable|string',
+            'sort' => 'nullable|string',
         ];
     }
 }

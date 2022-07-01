@@ -13,5 +13,4 @@ return [
         'start' => env('RB_TIMEFRAME_START', '08:00'),
         'end' => env('RB_TIMEFRAME_END', '17:00')
     ],
-
 ];

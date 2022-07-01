@@ -3,6 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Booking;
+use App\Models\Room;
+use App\Models\User;
 use Carbon\Carbon;
 
 class BookingRepository extends BaseRepository
@@ -34,11 +36,10 @@ class BookingRepository extends BaseRepository
                 function ($query, $searchString) {
                     $query
                         ->whereHas('room', function ($q) use ($searchString) {
-                            $q->where('name', 'LIKE', "%$searchString%");
+                            $q->whereFullText('name', $searchString);
                         })
                         ->orWhereHas('user', function ($q) use ($searchString) {
-                            $q->where('name', 'LIKE', "%$searchString%")
-                                ->orWhere('username', 'LIKE', "%$searchString%");
+                            $q->whereFullText('name', $searchString);
                         });
                 }
             )
@@ -88,6 +89,52 @@ class BookingRepository extends BaseRepository
                                     ->where('to_date', '<=', $endDate);
                             });
                         });
+                }
+            )
+            ->when(
+                isset($request['sort']) ? $request['sort'] : false,
+                function ($query, $sortString) {
+                    $sortArray = explode(',', $sortString);
+
+                    foreach ($sortArray as $key => $sortItem) {
+                        $item = explode(':', $sortItem);
+
+                        if ($item[0] == 'room') {
+                            if ($item[1] == 'asc') {
+                                $query->orderBy(
+                                    Room::select('name')
+                                        ->whereColumn('id', $this->model->getTable() . '.id')
+                                        ->orderBy('name')
+                                        ->limit(1)
+                                );
+                            } else {
+                                $query->orderByDesc(
+                                    Room::select('name')
+                                        ->whereColumn('id', $this->model->getTable() . '.id')
+                                        ->orderByDesc('name')
+                                        ->limit(1)
+                                );
+                            }
+                        } elseif ($item[0] == 'user') {
+                            if ($item[1] == 'asc') {
+                                $query->orderBy(
+                                    User::select('name')
+                                        ->whereColumn('id', $this->model->getTable() . '.id')
+                                        ->orderBy('name')
+                                        ->limit(1)
+                                );
+                            } else {
+                                $query->orderByDesc(
+                                    User::select('name')
+                                        ->whereColumn('id', $this->model->getTable() . '.id')
+                                        ->orderByDesc('name')
+                                        ->limit(1)
+                                );
+                            }
+                        } else {
+                            $query->orderBy($item[0], $item[1]);
+                        }
+                    }
                 }
             );
 
