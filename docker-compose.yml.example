@@ -11,17 +11,20 @@ services:
             - ./backend:/var/www/backend
         depends_on:
             - "database"
+            - "pma"
         networks:
             - room-booking
     # Frontend VUE
     frontend:
         image: node:current-alpine
         working_dir: /home/node/app
+        ports:
+            - 8000:3000
         volumes:
             - ./frontend:/home/node/app
         environment:
             NODE_ENV: development
-        command: "npm run dev"
+        command: "node server.js"
         depends_on:
             - backend
         networks:
@@ -32,7 +35,7 @@ services:
         volumes:
             - ./docker/vhost.conf:/etc/nginx/conf.d/default.conf
         ports:
-            - 81:80
+            - 80:80
         depends_on:
             - backend
             - frontend
